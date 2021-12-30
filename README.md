@@ -22,5 +22,5 @@ $ npm start
 
 # Detailed Setup
 
-You may refer (here)[https://github.com/Xavier-IV/financeland/wiki/General-Setup] to gain better insight on
+You may refer [here](https://github.com/Xavier-IV/financeland/wiki/General-Setup) to gain better insight on
 how to setup this project.
