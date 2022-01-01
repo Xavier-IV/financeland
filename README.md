@@ -12,6 +12,11 @@ This simple application is developed to help you start owning your finance.
 There will be sample environment variables for you in `.env.example` that you can modify
 to your use-case.
 
+# Dependencies
+
+This project depends on [FinanceLand API](https://github.com/Xavier-IV/financeland-api). Kindly follow
+the instruction in the documentation to complement this project!
+
 # Quick setup
 
 ```bash
