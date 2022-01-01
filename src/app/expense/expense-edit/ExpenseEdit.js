@@ -1,10 +1,12 @@
 import { useFormik } from 'formik';
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import ExpenseForm from '../Expense.form';
 import ExpenseSchema from '../Expense.schema';
 
 export default function ExpenseEdit() {
+  const [redirectTo, setRedirectTo] = useState(null);
+
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -18,6 +20,7 @@ export default function ExpenseEdit() {
 
   function onSubmit(values) {
     alert(JSON.stringify(values, null, 2));
+    setRedirectTo('/expense');
   }
 
   async function apiFetchExpense(id) {
@@ -33,6 +36,10 @@ export default function ExpenseEdit() {
     /* Mock api usage */
     await apiFetchExpense();
   }, []);
+
+  if (redirectTo) {
+    return <Navigate to={redirectTo} />;
+  }
 
   return (
     <>
