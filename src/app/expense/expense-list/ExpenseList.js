@@ -1,22 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Currency from '../../../components/shared/Currency';
+import ExpenseService from '../Expense.service';
 
 export default function ExpenseList() {
   const [expenses, setExpenses] = useState([]);
 
   useEffect(async () => {
-    /* Mock api usage */
-    setExpenses([
-      { id: 1, name: 'House Rent', price: 1250.0 },
-      { id: 2, name: 'Car Loan', price: 600.0 },
-    ]);
+    const { status, data } = await ExpenseService.fetchAll();
+    if (status === 200) setExpenses(data);
   }, []);
 
   function getList() {
-    return expenses.map(({ id, name, price }) => (
+    return expenses.map(({ id, name, amount }) => (
       <li key={id}>
-        <Link to={`/expense/${id}`}>{name}</Link> - <Currency amount={price} />
+        <Link to={`/expense/${id}`}>{name}</Link> - <Currency amount={amount} />
       </li>
     ));
   }

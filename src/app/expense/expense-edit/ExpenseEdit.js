@@ -1,10 +1,12 @@
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import ExpenseForm from '../Expense.form';
 import ExpenseSchema from '../Expense.schema';
+import ExpenseService from '../Expense.service';
 
 export default function ExpenseEdit() {
+  const { id } = useParams();
   const [redirectTo, setRedirectTo] = useState(null);
 
   const formik = useFormik({
@@ -15,27 +17,25 @@ export default function ExpenseEdit() {
       isRecurring: 'Recurring...',
     },
     validationSchema: ExpenseSchema,
-    onSubmit,
+    onSubmit: async (values) => {
+      await apiUpdateExpense(values);
+    },
   });
 
-  function onSubmit(values) {
-    alert(JSON.stringify(values, null, 2));
-    setRedirectTo('/expense');
+  async function apiUpdateExpense(values) {
+    const { status } = await ExpenseService.update(id, values);
+    if (status === 200) {
+      alert('Update success!');
+      setRedirectTo('/expense');
+    }
   }
 
   async function apiFetchExpense(id) {
-    await formik.setValues({
-      name: 'Books',
-      amount: 125.3,
-      category: 'Living',
-      isRecurring: 'No',
-    });
+    const { status, data } = await ExpenseService.fetchOne(id);
+    if (status === 200) await formik.setValues(data);
   }
 
-  useEffect(async () => {
-    /* Mock api usage */
-    await apiFetchExpense();
-  }, []);
+  useEffect(async () => await apiFetchExpense(id), []);
 
   if (redirectTo) {
     return <Navigate to={redirectTo} />;
