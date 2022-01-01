@@ -1,5 +1,6 @@
 import { Container } from 'react-bootstrap';
 import { Link, Outlet } from 'react-router-dom';
+import './Layout.css';
 
 export default function Layout() {
   return (
@@ -10,6 +11,26 @@ export default function Layout() {
       </Container>
 
       <Outlet />
+
+      <footer>
+        A simple project to practice React.
+        <br />
+        <a
+          href="https://github.com/Xavier-IV/financeland"
+          target={'_blank'}
+          rel="noreferrer"
+        >
+          React Project
+        </a>
+        &nbsp;|&nbsp;
+        <a
+          href="https://github.com/Xavier-IV/financeland-api"
+          target={'_blank'}
+          rel="noreferrer"
+        >
+          API Project
+        </a>
+      </footer>
     </>
   );
 }
