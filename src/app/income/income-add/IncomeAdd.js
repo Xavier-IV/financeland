@@ -1,11 +1,13 @@
 import { useFormik } from 'formik';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import IncomeForm from '../Income.form';
 import IncomeSchema from '../Income.schema';
-
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+import IncomeService from '../Income.service';
 
 export default function IncomeAdd() {
+  const [redirectTo, setRedirectTo] = useState(null);
+
   const formik = useFormik({
     initialValues: {
       id: null,
@@ -15,13 +17,19 @@ export default function IncomeAdd() {
     },
     validationSchema: IncomeSchema,
     onSubmit: async (values) => {
-      await sleep(500);
       await apiSubmitIncome(values);
     },
   });
 
   async function apiSubmitIncome(values) {
-    alert(JSON.stringify(values, null, 2));
+    const { status } = await IncomeService.create(values);
+    if (status !== 201) return;
+    alert('Record created!');
+    setRedirectTo('/income');
+  }
+
+  if (redirectTo) {
+    return <Navigate to={redirectTo} />;
   }
 
   return (
