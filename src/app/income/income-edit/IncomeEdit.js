@@ -3,8 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams, Navigate } from 'react-router-dom';
 import IncomeForm from '../Income.form';
 import IncomeSchema from '../Income.schema';
-
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+import IncomeService from '../Income.service';
 
 export default function IncomeEdit() {
   const { id } = useParams();
@@ -19,24 +18,25 @@ export default function IncomeEdit() {
     },
     validationSchema: IncomeSchema,
     onSubmit: async (values) => {
-      await sleep(500);
-      alert(JSON.stringify(values, null, 2));
+      await apiUpdateIncome(values);
       setRedirectTo('/income');
     },
   });
 
-  async function apiFetchIncome(id) {
-    await formik.setValues({
-      name: 'Salary',
-      amount: 3000.0,
-      companyName: 'Company ABC',
-    });
+  async function apiFetchIncome() {
+    const { status, data } = await IncomeService.fetchOne(id);
+    if (status !== 200) return;
+    await formik.setValues(data);
   }
 
-  useEffect(async () => {
-    /* Mock api usage */
-    await apiFetchIncome(id);
-  }, []);
+  async function apiUpdateIncome(values) {
+    const { status, data } = await IncomeService.update(id, values);
+    if (status !== 200) return;
+    await formik.setValues(data);
+    alert('Record updated!');
+  }
+
+  useEffect(async () => await apiFetchIncome(), []);
 
   if (redirectTo) {
     return <Navigate to={redirectTo} />;

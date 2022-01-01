@@ -1,9 +1,13 @@
 import { useFormik } from 'formik';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import ExpenseForm from '../Expense.form';
 import ExpenseSchema from '../Expense.schema';
+import ExpenseService from '../Expense.service';
 
 export default function ExpenseAdd() {
+  const [redirectTo, setRedirectTo] = useState(null);
+
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -12,16 +16,22 @@ export default function ExpenseAdd() {
       isRecurring: 'Recurring...',
     },
     validationSchema: ExpenseSchema,
-    onSubmit,
+    onSubmit: async (values) => {
+      await apiSubmitExpense(values);
+    },
   });
 
   async function apiSubmitExpense(values) {
-    /* Mock api usage */
-    alert(JSON.stringify(values, null, 2));
+    const { status } = await ExpenseService.create(values);
+
+    if (status === 201) {
+      alert('Create success!');
+      setRedirectTo('/expense');
+    }
   }
 
-  async function onSubmit(values) {
-    await apiSubmitExpense(values);
+  if (redirectTo) {
+    return <Navigate to={redirectTo} />;
   }
 
   return (
