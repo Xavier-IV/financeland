@@ -1,9 +1,12 @@
-import { Outlet } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
+import { Link, Outlet } from 'react-router-dom';
 
 export default function Layout() {
   return (
     <>
-      <h1>Financeland</h1>
+      <Container>
+        <Link to="/">Home</Link> | <Link to="/expense">Expense</Link>
+      </Container>
 
       <Outlet />
     </>
